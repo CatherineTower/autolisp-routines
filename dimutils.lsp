@@ -9,7 +9,7 @@
 ;; These replace the standard dimension commands with routines that
 ;; swap the layer for "DIM" before applying the dimension
 
-(undefine dimlinear)
+(command ".undefine" "dimlinear")
 (defun C:dimlinear (/ oldlayer)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
@@ -17,7 +17,7 @@
   (setvar "clayer" oldlayer)
   (princ))
 
-(undefine dimaligned)
+(command ".undefine" "dimaligned")
 (defun C:dimaligned (/ oldlayer)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
@@ -25,7 +25,7 @@
   (setvar "clayer" oldlayer)
   (princ))
 
-(undefine dimangular)
+(command ".undefine" "dimangular")
 (defun C:dimangular (/ oldlayer)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
@@ -33,7 +33,7 @@
   (setvar "clayer" oldlayer)
   (princ))
 
-(undefine dimarc)
+(command ".undefine" "dimarc")
 (defun C:dimarc (/ oldlayer)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
@@ -41,7 +41,7 @@
   (setvar "clayer" oldlayer)
   (princ))
 
-(undefine dimdiameter)
+(command ".undefine" "dimdiameter")
 (defun C:dimdiameter (/ oldlayer)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
@@ -49,7 +49,7 @@
   (setvar "clayer" oldlayer)
   (princ))
 
-(undefine dimordinate)
+(command ".undefine" "dimordinate")
 (defun C:dimordinate (/ oldlayer)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
@@ -57,7 +57,7 @@
   (setvar "clayer" oldlayer)
   (princ))
 
-(undefine dimradius)
+(command ".undefine" "dimradius")
 (defun C:dimradius (/ oldlayer)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
@@ -65,7 +65,23 @@
   (setvar "clayer" oldlayer)
   (princ))
 
-(undefine dim)
+(command ".undefine" "dimbaseline")
+(defun C:dimbaseline (/ oldlayer)
+  (setq oldlayer (getvar "clayer"))
+  (setvar "clayer" "dim")
+  (command ".dimbaseline")
+  (setvar "clayer" oldlayer)
+  (princ))
+
+(command ".undefine" "dimcontinue")
+(defun C:dimcontinue (/ oldlayer)
+  (setq oldlayer (getvar "clayer"))
+  (setvar "clayer" "dim")
+  (command ".dimcontinue")
+  (setvar "clayer" oldlayer)
+  (princ))
+
+(command ".undefine" "dim")
 (defun C:dim (/ oldlayer)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
