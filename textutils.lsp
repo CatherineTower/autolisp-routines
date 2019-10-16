@@ -9,11 +9,35 @@
 ;; These replace the TEXT and MLEADER commands with commands that set
 ;; the layer before creating the object
 
+;; (defun changelayer (entitydata newlayername)
+;;   (subst (cons 8 newlayername) (assoc 8 entitydata) entitydata)
+
 (command ".undefine" "mleader")
 (defun C:mleader (/ oldlayer)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "text")
   (command ".mleader" pause pause "")
   (command ".textedit" (entlast))
+  (setvar "clayer" oldlayer)
+  (princ))
+
+;; Utility function that draws a rectangle around text
+(defun textbox_ (textobj / tb ll ur ul lr)
+  (command "ucs" "Object" textobj)
+  (setq tb (textbox (list (cons -1 textobj)))
+	ll (car tb)
+	ur (cadr tb)
+	ul (list (car ll) (cadr ur))
+	lr (list (car ur) (cadr ll)))
+  (command "pline" ll lr ur ul "Close")
+  (command "ucs" "p")
+  (princ))
+
+(defun c:textcloud (/ oldlayer boxpoints)
+  (setq oldlayer (getvar "clayer"))
+  (setvar "clayer" "text")
+  (command ".mtext")
+  (textbox_ (entget (entlast)))
+  (command "revcloud" "o" (entlast))
   (setvar "clayer" oldlayer)
   (princ))
