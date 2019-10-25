@@ -192,6 +192,7 @@
   (setvar "clayer" oldlayer)
   (princ))
 
+;; This is almost a lost cause for now
 (defun C:fdim (/ olddimstyle)
   (setq olddimstyle (getvar "dimstyle"))
   (command "dimstyle" "r" "field verify")
