@@ -1,0 +1,12 @@
+===========================================================================
+AutoLISP Routines
+===========================================================================
+
+This repository is meant to hold utility functions and useful commands
+written in AutoLISP for Baye Enterprises. The routines themselves are
+open-source and free to be used for any purpose whatsoever. That being
+said, you probably won't find much use for them if you're not working
+at Baye Enterprises.
+
+All commands were written and tested by Catherine Tower unless
+otherwise specified.
