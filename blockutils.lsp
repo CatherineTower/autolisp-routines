@@ -59,7 +59,6 @@
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "symb")
   (command ".insert" "section marker_anno" pause "" "" "")
-  (command ".rotate" (entlast) "" (getvar "lastpoint") "180")
   (setvar "clayer" oldlayer)
   (princ))
 
