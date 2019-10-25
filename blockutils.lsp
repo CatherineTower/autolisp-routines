@@ -42,7 +42,11 @@
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "symb")
   (command ".insert" "title bar_anno" pause "" "" ""
-	   "" "" "" (getvar "cannoscale"))
+	   "" "" ""
+	   (if (and (/= "Model" (getvar "ctab"))
+		    (= 1 (getvar "cvport")))
+	       "1'-0\" = 1'-0\""
+	       (getvar "cannoscale")))
   (setvar "clayer" oldlayer)
   (princ))
 
