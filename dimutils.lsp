@@ -192,6 +192,24 @@
   (setvar "clayer" oldlayer)
   (princ))
 
+;; These next two are different in that they don't automatically edit
+;; the text. This wouldn't work very well, since these commands create
+;; many dimension objects
+(defun C:fdba (/ olddimstyle old-dim-spacing oldlayer)
+  (setq olddimstyle (getvar "dimstyle"))
+  (setq oldlayer (getvar "clayer"))
+  (setq old-dim-spacing (getvar "dimdli"))
+  (command "dimstyle" "r" "field verify")
+  (setvar "dimdli" 0.375)
+  (setvar "clayer" "dim")
+  (command ".dimbaseline")
+  (while (= 1 (getvar "cmdactive"))
+    (command pause))
+  (setvar "dimdli" old-dim-spacing)
+  (setvar "clayer" "0")
+  (command "dimstyle" "r" olddimstyle "")
+  (princ))
+
 ;; This is almost a lost cause for now
 (defun C:fdim (/ olddimstyle)
   (setq olddimstyle (getvar "dimstyle"))
