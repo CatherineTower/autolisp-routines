@@ -157,12 +157,15 @@
   (setvar "clayer" oldlayer)
   (princ))
 
-(defun C:fddi (/ olddimstyle)
+(defun C:fddi (/ olddimstyle oldlayer)
   (setq olddimstyle (getvar "dimstyle"))
+  (setq oldlayer (getvar "clayer"))
   (command "dimstyle" "r" "field verify")
-  (command "dimdiameter")
+  (setvar "clayer" "dim")
+  (command ".dimdiameter" pause pause)
   (command "textedit" (entlast))
   (command "dimstyle" "r" olddimstyle "")
+  (setvar "clayer" oldlayer)
   (princ))
 
 (defun C:fdimord (/ olddimstyle)
