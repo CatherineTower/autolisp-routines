@@ -210,6 +210,18 @@
   (command "dimstyle" "r" olddimstyle "")
   (princ))
 
+(defun C:fdco (/ olddimstyle oldlayer)
+  (setq olddimstyle (getvar "dimstyle"))
+  (setq oldlayer (getvar "clayer"))
+  (command "dimstyle" "r" "field verify")
+  (setvar "clayer" "dim")
+  (command ".dimcontinue")
+  (while (= 1 (getvar "cmdactive"))
+    (command pause))
+  (setvar "clayer" "0")
+  (command "dimstyle" "r" olddimstyle "")
+  (princ))
+
 ;; This is almost a lost cause for now
 (defun C:fdim (/ olddimstyle)
   (setq olddimstyle (getvar "dimstyle"))
