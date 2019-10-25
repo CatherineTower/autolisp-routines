@@ -30,6 +30,8 @@
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (command ".dimangular")
+  (while (= 1 (getvar "cmdactive"))
+    (command pause))
   (setvar "clayer" oldlayer)
   (princ))
 
@@ -66,13 +68,16 @@
   (princ))
 
 (command ".undefine" "dimbaseline")
-(defun C:dimbaseline (/ oldlayer)
+(defun C:dimbaseline (/ oldlayer old-dim-spacing)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
+  (setq old-dim-spacing (getvar "dimdli"))
+  (setvar "dimdli" 0.375)
   (command ".dimbaseline")
   (while (= 1 (getvar "cmdactive"))
     (command pause))
   (setvar "clayer" oldlayer)
+  (setvar "dimdli" old-dim-spacing)
   (princ))
 
 (command ".undefine" "dimcontinue")
@@ -85,11 +90,17 @@
   (setvar "clayer" oldlayer)
   (princ))
 
+;; This one doesn't work because of the specific nature of DIM. I'll
+;; have to investigate it more later.
+;; Of course, I might not, since I never use the DIM command.
+
 (command ".undefine" "dim")
 (defun C:dim (/ oldlayer)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (command ".dim")
+  (while (= 1 (getvar "cmdactive"))
+    (command pause))
   (setvar "clayer" oldlayer)
   (princ))
 
@@ -100,12 +111,15 @@
 
 ;; NOTE: as of now these functions don't work.
 
-(defun C:fdli (/ olddimstyle)
+(defun C:fdli (/ olddimstyle oldlayer)
+  (setq oldlayer (getvar "clayer"))
   (setq olddimstyle (getvar "dimstyle"))
+  (setvar "clayer" "dim")
   (command "dimstyle" "r" "field verify")
-  (c:dimlinear)
+  (command ".dimlinear" pause pause pause)
   (command "textedit" (entlast))
   (command "dimstyle" "r" olddimstyle "")
+  (setvar "clayer" oldlayer)
   (princ))
 
 (defun C:fdal (/ olddimstyle)
