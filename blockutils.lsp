@@ -37,14 +37,18 @@
 ;; 	   "" ""
 ;; 	   (+ 90 (calculate-angle point1 point2))))
 
+;; Utility function to determine whether we're in model or paperspace
+(defun in-paperspace-p ()
+  (and (/= "Model" (getvar "ctab"))
+       (= 1 (getvar "cvport"))))
+
 ;; insert title bar
 (defun c:intitle (/ oldlayer)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "symb")
   (command ".insert" "title bar_anno" pause "" "" ""
 	   "" "" ""
-	   (if (and (/= "Model" (getvar "ctab"))
-		    (= 1 (getvar "cvport")))
+	   (if (in-paperspace-p)
 	       "1'-0\" = 1'-0\""
 	       (getvar "cannoscale")))
   (setvar "clayer" oldlayer)
