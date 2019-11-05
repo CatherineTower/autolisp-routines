@@ -6,36 +6,25 @@
 ;; these utilities are meant specifically for the Baye environment and
 ;; may malfunction under any other circumstances
 
-;; Inserts a break block on the "SYMB" layer
-
 (defun radtodeg (radians)
   (* radians (/ 180 pi)))
 
-;; insert break
-(defun c:insbr (/ oldlayer)
+;; Inserts a break block on the "SYMB" layer between two points
+(defun c:insbr (/ oldlayer first-point second-point x1 x2 y1 y2)
   (setq oldlayer (getvar "clayer"))
+  (setq first-point (getpoint "Select first point: ")
+	second-point (getpoint "Select second point: ")
+	x1 (car first-point)
+	y1 (cadr first-point)
+	x2 (car second-point)
+	y2 (cadr second-point))
   (setvar "clayer" "symb")
-  (command ".insert" "break" pause "" ""
-	   (+ 90 (radtodeg (getangle "Rotation Angle: "))))
+  (command "insert" "break"
+	   (list (/ (+ x1 x2) 2) (/ (+ y1 y2) 2))
+	   "" ""
+	   (+ 90 (radtodeg (angle first-point second-point))))
   (setvar "clayer" oldlayer)
   (princ))
-
-;; (defun calculate-angle (point1 point2)
-;;   (let ((rise (- (cadr point2) (cadr point1)))
-;; 	(run (- (car point2) (car point1))))
-;;     (radtodeg (/ rise run))))
-
-;; (defun c:insbr (/ first-point second-point x1 x2 y1 y2)
-;;   (setq first-point (getpoint "Select first point: "))
-;;   (setq second-point (getpoint "Select second point: "))
-;;   (setq x1 (car first-point))
-;;   (setq y1 (cadr first-point))
-;;   (setq x2 (car second-point))
-;;   (setq y2 (cadr second-point))
-;;   (command "insert" "break"
-;; 	   (list (/ (+ x1 x2) 2) (/ (+ y1 y2)))
-;; 	   "" ""
-;; 	   (+ 90 (calculate-angle point1 point2))))
 
 ;; Utility function to determine whether we're in model or paperspace
 (defun in-paperspace-p ()
