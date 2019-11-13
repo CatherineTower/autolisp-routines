@@ -230,3 +230,27 @@
   (command "textedit" (entlast))
   (command "dimstyle" "r" olddimstyle "")
   (princ))
+
+
+;; This is purely a convenience function for something I draw often. I
+;; frequently need a chain of dimensions followed by an overall. I'm
+;; tired of going through all the motions, so here's a quick script to
+;; do it.
+(defun c:dimchain (/ oldlayer first-dim)
+  (setq oldlayer (getvar "clayer"))
+  (setvar "clayer" "dim")
+
+  (command ".dimlinear")
+  (while (= 1 (getvar "cmdactive"))
+    (command pause))
+  (setq first-dim (entlast))
+  (command ".dimcontinue")
+  (while (= 1 (getvar "cmdactive"))
+    (command pause))
+  (command ".dimbaseline" "s" first-dim)
+  (while (= 1 (getvar "cmdactive"))
+    (command pause))
+
+  (setvar "clayer" oldlayer)
+  (princ))
+  
