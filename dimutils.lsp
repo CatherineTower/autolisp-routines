@@ -9,6 +9,8 @@
 ;; These replace the standard dimension commands with routines that
 ;; swap the layer for "DIM" before applying the dimension
 
+(setq +preferred-dim-spacing+ 0.375)
+
 (command ".undefine" "dimlinear")
 (defun C:dimlinear (/ oldlayer)
   (setq oldlayer (getvar "clayer"))
@@ -72,7 +74,7 @@
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (setq old-dim-spacing (getvar "dimdli"))
-  (setvar "dimdli" 0.375)
+  (setvar "dimdli" +preferred-dim-spacing+)
   (command ".dimbaseline")
   (while (= 1 (getvar "cmdactive"))
     (command pause))
@@ -200,7 +202,7 @@
   (setq oldlayer (getvar "clayer"))
   (setq old-dim-spacing (getvar "dimdli"))
   (command "dimstyle" "r" "field verify")
-  (setvar "dimdli" 0.375)
+  (setvar "dimdli" +preferred-dim-spacing+)
   (setvar "clayer" "dim")
   (command ".dimbaseline")
   (while (= 1 (getvar "cmdactive"))
@@ -236,9 +238,12 @@
 ;; frequently need a chain of dimensions followed by an overall. I'm
 ;; tired of going through all the motions, so here's a quick script to
 ;; do it.
-(defun c:dimchain (/ oldlayer first-dim)
+(defun c:dimchain (/ oldlayer first-dim old-dim-spacing)
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
+
+  (setq old-dim-spacing (getvar "dimdli"))
+  (setvar "dimdli" +preferred-dim-spacing+)
 
   (command ".dimlinear")
   (while (= 1 (getvar "cmdactive"))
@@ -251,6 +256,7 @@
   (while (= 1 (getvar "cmdactive"))
     (command pause))
 
+  (setvar "dimdli" old-dim-spacing)
   (setvar "clayer" oldlayer)
   (princ))
   
