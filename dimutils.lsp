@@ -224,10 +224,11 @@
   (command ".dimcontinue")
   (while (= 1 (getvar "cmdactive"))
     (command pause))
+  (setq endpoint (getvar "lastpoint"))
   (command ".dimbaseline" "s" first-dim)
   (while (= 1 (getvar "cmdactive"))
     (command pause))
 
   (setvar "dimdli" old-dim-spacing)
-  (setvar "clayer")
+  (setvar "clayer" oldlayer)
   (princ))
