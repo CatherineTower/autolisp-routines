@@ -25,10 +25,10 @@
 (defun textbox_ (textobj / tb ll ur ul lr)
   (command "ucs" "Object" textobj)
   (setq tb (textbox (list (cons -1 textobj)))
-	ll (car tb)
-	ur (cadr tb)
-	ul (list (car ll) (cadr ur))
-	lr (list (car ur) (cadr ll)))
+    ll (car tb)
+    ur (cadr tb)
+    ul (list (car ll) (cadr ur))
+    lr (list (car ur) (cadr ll)))
   (command "pline" ll lr ur ul "Close")
   (command "ucs" "p")
   (princ))
@@ -41,3 +41,7 @@
   (command "revcloud" "o" (entlast))
   (setvar "clayer" oldlayer)
   (princ))
+
+
+(defun evaltext ()
+  (eval (read (cdr (assoc 1 (entget (car (entsel))))))))
