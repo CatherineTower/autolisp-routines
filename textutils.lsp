@@ -43,5 +43,13 @@
   (princ))
 
 
-(defun evaltext ()
-  (eval (read (cdr (assoc 1 (entget (car (entsel))))))))
+(defun evaltext (text)
+  (eval (read (cdr (assoc 1 (entget text))))))
+
+(defun replace-text-with-output (text / output entity)
+  (setq output (evaltext text)
+        entity (entget text))
+  (setq entity (subst (cons 1 (vl-princ-to-string output)) (assoc 1 entity) entity))
+  (entmod entity)
+
+  (princ))
