@@ -8,5 +8,45 @@ open-source and free to be used for any purpose whatsoever. That being
 said, you probably won't find much use for them if you're not working
 at Baye Enterprises.
 
+===========================================================================
+Usage
+===========================================================================
+
+Get the Files
+
+  Using Git
+    Clone the Git repository with the following command:
+    $ git clone https://GitHub.com/CatherineTower/autolisp-routines.git
+
+  In a ZIP File
+    Download a zipped archive of the files using GitHub. The button
+    should be located in the top right hand corner of the
+    webpage. Once the file has downloaded, decompress the archive.
+
+Load the Files
+
+  In a running instance of AutoCAD, run the `APPLOAD` command to bring
+  up the "Load/Unload Applications" window. Navigate to the location
+  where you saved the repository and select the files you want loaded.
+
+  Note that there are currently dependencies, so it's safest to load
+  all of the files together.
+
+Add the Files to Your Load Path [Optional]
+
+  In the "Load/Unload Applications" window, there's a panel which says
+  "Startup Suite". This is the list of AutoCAD programs which are
+  loaded at application startup. Click "Contents", then "Add" to add
+  the AutoLISP files to your load path.
+
+Invoke the Commands
+
+  Any function prepended by a C: is a runnable command (i.e. C:mleader
+  is the command MLEADER). These commands can be invoked in the usual
+  way. Other functions have to be enclosed in parentheses and have any
+  arguments they take passed to them. If you're not sure how to handle
+  that, it's probably better to stick to the standard un-parenthesized
+  commands.
+
 All commands were written and tested by Catherine Tower unless
 otherwise specified.
