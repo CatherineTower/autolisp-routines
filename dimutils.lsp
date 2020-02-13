@@ -18,7 +18,7 @@
   (setvar "dimdli" spacing))
 
 (command ".undefine" "dimlinear")
-(defun C:dimlinear (/ oldlayer olderror)
+(defun C:dimlinear (/ oldlayer *error*)
 
   (defun *error* (message)
     (*layer-error* oldlayer)
@@ -33,7 +33,7 @@
   (princ))
 
 (command ".undefine" "dimaligned")
-(defun C:dimaligned (/ oldlayer)
+(defun C:dimaligned (/ oldlayer *error*)
 
   (defun *error* (message)
     (*layer-error* oldlayer)
@@ -48,7 +48,7 @@
   (princ))
 
 (command ".undefine" "dimangular")
-(defun C:dimangular (/ oldlayer)
+(defun C:dimangular (/ oldlayer *error*)
 
   (defun *error* (message)
     (*layer-error* oldlayer)
@@ -63,7 +63,7 @@
   (princ))
 
 (command ".undefine" "dimarc")
-(defun C:dimarc (/ oldlayer)
+(defun C:dimarc (/ oldlayer *error*)
 
   (defun *error* (message)
     (*layer-error* oldlayer)
@@ -78,7 +78,7 @@
   (princ))
 
 (command ".undefine" "dimdiameter")
-(defun C:dimdiameter (/ oldlayer)
+(defun C:dimdiameter (/ oldlayer *error*)
 
   (defun *error* (message)
     (*layer-error* oldlayer)
@@ -93,7 +93,7 @@
   (princ))
 
 (command ".undefine" "dimordinate")
-(defun C:dimordinate (/ oldlayer)
+(defun C:dimordinate (/ oldlayer *error*)
 
   (defun *error* (message)
     (*layer-error* oldlayer)
@@ -108,7 +108,7 @@
   (princ))
 
 (command ".undefine" "dimradius")
-(defun C:dimradius (/ oldlayer)
+(defun C:dimradius (/ oldlayer *error*)
 
   (defun *error* (message)
     (*layer-error* oldlayer)
@@ -123,7 +123,7 @@
   (princ))
 
 (command ".undefine" "dimbaseline")
-(defun C:dimbaseline (/ oldlayer old-dim-spacing)
+(defun C:dimbaseline (/ oldlayer old-dim-spacing *error*)
 
   (defun *error* (message)
     (*layer-error* oldlayer)
@@ -142,7 +142,7 @@
   (princ))
 
 (command ".undefine" "dimcontinue")
-(defun C:dimcontinue (/ oldlayer)
+(defun C:dimcontinue (/ oldlayer *error*)
 
   (defun *error* (message)
     (*layer-error* oldlayer)
@@ -161,7 +161,7 @@
 ;; Of course, I might not, since I never use the DIM command.
 
 (command ".undefine" "dim")
-(defun C:dim (/ oldlayer)
+(defun C:dim (/ oldlayer *error*)
 
   (defun *error* (message)
     (*layer-error* oldlayer)
@@ -267,7 +267,7 @@
 ;; frequently need a chain of dimensions followed by an overall. I'm
 ;; tired of going through all the motions, so here's a quick script to
 ;; do it.
-(defun c:dimchain (/ oldlayer first-dim old-dim-spacing)
+(defun c:dimchain (/ oldlayer first-dim old-dim-spacing *error*)
 
   (defun *error* (message)
     (*layer-error* oldlayer)

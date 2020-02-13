@@ -1,4 +1,3 @@
-
 ;; ================================================================================
 ;; BLOCK UTILITIES
 ;; ================================================================================
@@ -11,19 +10,24 @@
   (* radians (/ 180 pi)))
 
 ;; Inserts a break block on the "SYMB" layer between two points
-(defun c:insbr (/ oldlayer first-point second-point x1 x2 y1 y2)
+(defun c:insbr (/ oldlayer first-point second-point x1 x2 y1 y2 *error*)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setq first-point (getpoint "Select first point: ")
-	second-point (getpoint "Select second point: ")
-	x1 (car first-point)
-	y1 (cadr first-point)
-	x2 (car second-point)
-	y2 (cadr second-point))
+    second-point (getpoint "Select second point: ")
+    x1 (car first-point)
+    y1 (cadr first-point)
+    x2 (car second-point)
+    y2 (cadr second-point))
   (setvar "clayer" "symb")
   (command "insert" "break"
-	   (list (/ (+ x1 x2) 2) (/ (+ y1 y2) 2))
-	   "" ""
-	   (+ 90 (radtodeg (angle first-point second-point))))
+       (list (/ (+ x1 x2) 2) (/ (+ y1 y2) 2))
+       "" ""
+       (+ 90 (radtodeg (angle first-point second-point))))
   (setvar "clayer" oldlayer)
   (princ))
 
@@ -33,20 +37,30 @@
        (= 1 (getvar "cvport"))))
 
 ;; insert title bar
-(defun c:intitle (/ oldlayer)
+(defun c:intitle (/ oldlayer *error*)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "symb")
   (command ".insert" "title bar_anno" pause "" "" ""
-	   "" "" ""
-	   (if (in-paperspace-p)
-	       "1'-0\" = 1'-0\""
-	       (getvar "cannoscale"))
-	   "")
+       "" "" ""
+       (if (in-paperspace-p)
+           "1'-0\" = 1'-0\""
+           (getvar "cannoscale"))
+       "")
   (setvar "clayer" oldlayer)
   (princ))
 
 ;; insert elevation
-(defun c:insel (/ oldlayer)
+(defun c:insel (/ oldlayer *error*)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "symb")
   (command ".insert" "elev bug_anno" pause "" "" "")
@@ -54,7 +68,12 @@
   (princ))
 
 ;; insert section
-(defun c:insec (/ oldlayer)
+(defun c:insec (/ oldlayer *error*)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "symb")
   (command ".insert" "section marker_anno" pause "" "" "")
@@ -62,7 +81,12 @@
   (princ))
 
 ;; insert finished end symbol
-(defun c:fe (/ oldlayer)
+(defun c:fe (/ oldlayer *error*)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "symb")
   (command ".insert" "finished end" pause "" "" "")
@@ -70,7 +94,12 @@
   (princ))
 
 ;; insert detail bubble
-(defun c:indet (/ oldlayer)
+(defun c:indet (/ oldlayer *error*)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "symb")
   (command ".insert" "detail bubble_anno" pause "" "" "")

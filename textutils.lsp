@@ -13,7 +13,7 @@
 ;;   (subst (cons 8 newlayername) (assoc 8 entitydata) entitydata)
 
 (command ".undefine" "mleader")
-(defun C:mleader (/ oldlayer)
+(defun C:mleader (/ oldlayer *error*)
 
   (defun *error* (message)
     (*layer-error* oldlayer)
@@ -25,6 +25,29 @@
   (command ".textedit" (entlast))
   (setvar "clayer" oldlayer)
   (princ))
+
+(command ".undefine" "mtext")
+(defun C:mtext (/ oldlayer *error*)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
+  (setq oldlayer (getvar "clayer"))
+  (setvar "clayer" "text")
+  (command ".mtext" pause pause "")
+  (command ".textedit" (entlast))
+  (setvar "clayer" oldlayer)
+  (princ))
+
+;; So. For some reason this function works just fine, no errors, and
+;; modifies the entity it's passed. However, the modification doesn't
+;; stick. It works on polylines (which also have DXF group codes 41
+;; and 42) but not MTEXT objects. I cannot believe this disrespect.
+(defun trim-text (entlist / text-width)
+  (setq text-width (cdr (assoc 42 entlist)))
+  (setq entlist (subst (cons 41 text-width) (assoc 41 entlist) entlist))
+  (entmod entlist))
 
 ;; Utility function that draws a rectangle around text
 (defun textbox_ (textobj / tb ll ur ul lr)
