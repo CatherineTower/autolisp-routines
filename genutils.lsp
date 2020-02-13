@@ -20,3 +20,15 @@
 
 (defun endp (arg)
   (and (listp arg) (null (cdr arg))))
+
+(defun acons (obj1 obj2 alist)
+  (setq alist (cons (cons obj1 obj2) alist)))
+
+(defun 1+ (number)
+  (+ 1 number))
+
+(defun 1- (number)
+  (- number 1))
+
+(defun push (obj list)
+  (setq list (cons obj list)))
