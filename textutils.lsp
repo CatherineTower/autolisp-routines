@@ -14,6 +14,11 @@
 
 (command ".undefine" "mleader")
 (defun C:mleader (/ oldlayer)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "text")
   (command ".mleader" pause pause "")

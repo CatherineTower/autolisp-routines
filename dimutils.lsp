@@ -11,8 +11,19 @@
 
 (setq +preferred-dim-spacing+ 0.375)
 
+(defun *layer-error* (layer)
+  (setvar "clayer" layer))
+
+(defun *spacing-error* (spacing)
+  (setvar "dimdli" spacing))
+
 (command ".undefine" "dimlinear")
-(defun C:dimlinear (/ oldlayer)
+(defun C:dimlinear (/ oldlayer olderror)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (command ".dimlinear")
@@ -23,6 +34,11 @@
 
 (command ".undefine" "dimaligned")
 (defun C:dimaligned (/ oldlayer)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (command ".dimaligned")
@@ -33,6 +49,11 @@
 
 (command ".undefine" "dimangular")
 (defun C:dimangular (/ oldlayer)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (command ".dimangular")
@@ -43,6 +64,11 @@
 
 (command ".undefine" "dimarc")
 (defun C:dimarc (/ oldlayer)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (command ".dimarc")
@@ -53,6 +79,11 @@
 
 (command ".undefine" "dimdiameter")
 (defun C:dimdiameter (/ oldlayer)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (command ".dimdiameter")
@@ -63,6 +94,11 @@
 
 (command ".undefine" "dimordinate")
 (defun C:dimordinate (/ oldlayer)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (command ".dimordinate")
@@ -73,6 +109,11 @@
 
 (command ".undefine" "dimradius")
 (defun C:dimradius (/ oldlayer)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (command ".dimradius")
@@ -83,6 +124,12 @@
 
 (command ".undefine" "dimbaseline")
 (defun C:dimbaseline (/ oldlayer old-dim-spacing)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (*spacing-error* old-dim-spacing)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (setq old-dim-spacing (getvar "dimdli"))
@@ -95,7 +142,12 @@
   (princ))
 
 (command ".undefine" "dimcontinue")
-(defun C:dimcontinue (/ oldlayer)  
+(defun C:dimcontinue (/ oldlayer)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (command ".dimcontinue")
@@ -110,6 +162,11 @@
 
 (command ".undefine" "dim")
 (defun C:dim (/ oldlayer)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
   (command ".dim")
@@ -211,6 +268,12 @@
 ;; tired of going through all the motions, so here's a quick script to
 ;; do it.
 (defun c:dimchain (/ oldlayer first-dim old-dim-spacing)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (*spacing-error* old-dim-spacing)
+    (princ))
+
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
 
