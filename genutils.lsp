@@ -33,3 +33,16 @@
 
 (defun push (obj list)
   (setq list (cons obj list)))
+
+;; These functions were written by Lee Mac and can be found at
+;; http://www.lee-mac.com/random.html
+
+(defun randgen (/ a c m)
+  (setq m 4294967296.0
+        a 1664525.0
+        c 1013904223.0
+        $xn (rem (+ c (* a (cond ($xn) ((getvar 'date))))) m))
+  (/ $xn m))
+
+(defun random (a b)
+  (+ (min a b) (fix (* (randgen) (1+ (abs (- a b)))))))
