@@ -45,4 +45,4 @@
   (/ $xn m))
 
 (defun random (a b)
-  (+ (min a b) (fix (* (randgen) (1+ (abs (- a b)))))))
+  (+ (min a b) (* (randgen) (1+ (abs (- a b))))))
