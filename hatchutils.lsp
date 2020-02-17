@@ -1,5 +1,5 @@
 ;; ================================================================================
-;; TEXT UTILITIES
+;; HATCH UTILITIES
 ;; ================================================================================
 
 ;; Written by Catherine Tower while she was working at Baye Enterprises
@@ -17,8 +17,8 @@
                 origin-y (cdr (assoc 44 (entget current-hatch))))
           (command ".hatchedit" current-hatch
                    "O" "S"
-                   (list (+ origin-x (random -3 3))
-                         (+ origin-y (random -3 3)))
+                   (list (+ origin-x (random -20 20))
+                         (+ origin-y (random -20 20)))
                    "N")
           (setq i (1+ i)))
   (princ))
