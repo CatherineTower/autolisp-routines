@@ -1,8 +1,4 @@
-(defun totalpages (/ total)
-  (setq total 0)
-  (foreach page (layoutlist)
-       (cond ((or (equal "CVR" page)
-              (equal "FP" page)
-              (equal "BL" page)))
-         (t (setq total (+ 1 total)))))
-  total)
+(defun totalpages ()
+  (length (vl-remove-if-not
+           '(lambda (page) (numberp (read page)))
+           (layoutlist))))
