@@ -105,3 +105,16 @@
   (command ".insert" "detail bubble_anno" pause "" "" "")
   (setvar "clayer" oldlayer)
   (princ))
+
+;; insert leveler block
+(defun c:inlev (/ oldlayer *error*)
+
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
+  (setq oldlayer (getvar "clayer"))
+  (setvar "clayer" "hardware")
+  (command ".insert" "leveler" pause "" "" "")
+  (setvar "clayer" oldlayer)
+  (princ))
