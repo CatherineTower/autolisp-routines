@@ -84,10 +84,11 @@
 (defun c:revcloudtext (/ text-set i)
   (setq text-set (ssget '((0 . "MTEXT"))))
   (setq i 0)
-  (repeat (sslength text-set)
-          (revcloud-around-text (ssname text-set i))
-          (setq i (1+ i)))
-  (princ))
+  (if text-set
+      (repeat (sslength text-set)
+              (revcloud-around-text (ssname text-set i))
+              (setq i (1+ i))))
+      (princ))
 
 (defun evaltext (text)
   (eval (read (cdr (assoc 1 (entget text))))))
