@@ -16,11 +16,7 @@ Get the Files
 
   Using Git
     Clone the Git repository with the following command:
-<<<<<<< HEAD
     $ git clone https://GitHub.com/CatherineTower/autolisp-routines.git
-=======
-    $ git clone https://GitHub.com/CatherineTower/autolisp-routines.github
->>>>>>> ab53cf3a302bc6a22b726b1aea5286e41132b06b
 
   In a ZIP File
     Download a zipped archive of the files using GitHub. The button
