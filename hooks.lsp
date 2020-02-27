@@ -17,6 +17,9 @@
 (setq *after-open-hooks* nil)
 (setq *before-close-hooks* nil)
 
+(defun run-hooks (hooks)
+  (mapcar '(lambda (x) (apply x nil)) hooks))
+
 ;; add-hook and remove-hook are the interface into the hooks.
 (defun add-hook (where func)
   (cond ((eq 'before-save-hook where)
@@ -58,11 +61,9 @@
 
 (command ".undefine" "qsave")
 (defun c:qsave ()
-  (mapcar '(lambda (x) (apply x nil))
-          *before-save-hooks*)
+  (run-hooks *before-save-hooks*)
   (command ".qsave")
-  (mapcar '(lambda (x) (apply x nil))
-          *after-save-hooks*)
+  (run-hooks *after-save-hooks*)
   (princ))
 
 ;; This one was irritating because for SOME REASON you have to
@@ -70,17 +71,15 @@
 ;; code.
 (command ".undefine" "open")
 (defun c:open (/ file)
-  (setq file (getfiled "Select File" "" "dwg" 0))
+  (setq file (getfiled "Select File" "" "" 0))
   (if file
       (vla-activate
        (vla-open
         (vla-get-documents (vlax-get-acad-object))
         file)))
-      (mapcar '(lambda () (apply x nil))
-              *after-open-hooks*))
+      (run-hooks *after-open-hooks*))
 
 (command ".undefine" "close")
 (defun c:close ()
-  (mapcar '(lambda (x) (apply x nil))
-          *before-close-hooks*)
+  (run-hooks *before-close-hooks*)
   (vla-SendCommand (vla-get-ActiveDocument (vlax-get-acad-object)) "_.CLOSE "))
