@@ -11,6 +11,20 @@
 ;; replacing them with a version that wraps the hooks around the
 ;; default commands.
 
+;; ======================================================================
+;; WARNING: BRITTLE CODE
+;; ======================================================================
+
+;; AutoCAD isn't nearly as extensible as I'd like for it to be. These
+;; hooks, more than anything, are a kludge to try and add the
+;; extensibility I want. As a result, this code is INCREDIBLY brittle,
+;; and can mess up your environment. If you run into problems while
+;; using this file:
+;;   1) make sure it's not in your load path
+;;   2) save all of your drawings (using ".SAVE" or ".QSAVE")
+;;   3) restart AutoCAD
+;; and then wait for me to make this code bulletproof, I guess. Good luck.
+
 ;; These are the lists of hooks.
 (setq *before-save-hooks* nil)
 (setq *after-save-hooks* nil)
