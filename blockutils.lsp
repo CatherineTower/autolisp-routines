@@ -118,3 +118,15 @@
   (command ".insert" "leveler" pause "" "" "")
   (setvar "clayer" oldlayer)
   (princ))
+
+;; insert North arrow block
+(defun c:insar (/ oldlayer *error*)
+  (defun *error* (message)
+    (*layer-error* oldlayer)
+    (princ))
+
+  (setq oldlayer (getvar "clayer"))
+  (setvar "clayer" "symb")
+  (command ".insert" "north arrow" pause "" "" "")
+  (setvar "clayer" oldlayer)
+  (princ))
