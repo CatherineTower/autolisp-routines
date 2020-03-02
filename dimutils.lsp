@@ -6,6 +6,31 @@
 ;; these utilities are meant specifically for the Baye environment and
 ;; may malfunction under any other circumstances
 
+;; This is a somewhat onerous attempt at using a Common Lisp-style
+;; macro. Instead of the nice defmacro-and-backquote syntax found in
+;; proper Lisps, this opts for a runtime-constructed list which is fed
+;; into eval. Still, this is a huge breakthrough and reduces code
+;; duplication by a LOT.
+
+;; A warning, however: the commands will not execute without a layer
+;; named "DIM" in the drawing. What's more, they'll give you a really
+;; cryptic and unhelpful error message.
+(defun define-dimension-command (name command-name undefine-p)
+  (if undefine-p
+      (eval (list 'command "undefine" command-name)))
+  (eval
+   (list 'defun name '(/ oldlayer *error*)
+         '(defun *error* ()
+           (setvar "clayer" oldlayer))
+         '(setq oldlayer (getvar "clayer"))
+         '(setvar "clayer" "dim")
+         (list 'command (strcat "." command-name))
+         '(while (= 1 (getvar "cmdactive"))
+           (command pause))
+         '(setvar "clayer" oldlayer)
+         '(princ)))
+  (princ))
+
 ;; These replace the standard dimension commands with routines that
 ;; swap the layer for "DIM" before applying the dimension
 
@@ -17,111 +42,23 @@
 (defun *spacing-error* (spacing)
   (setvar "dimdli" spacing))
 
-(command ".undefine" "dimlinear")
-(defun C:dimlinear (/ oldlayer *error*)
+(define-dimension-command 'c:dimlinear "dimlinear" t)
+(define-dimension-command 'c:dimaligned "dimaligned" t)
+(define-dimension-command 'c:dimangular "dimangular" t)
+(define-dimension-command 'c:dimarc "dimarc" t)
+(define-dimension-command 'c:dimdiameter "dimdiameter" t)
+(define-dimension-command 'c:dimordinate "dimordinate" t)
+(define-dimension-command 'c:dimradius "dimradius" t)
+(define-dimension-command 'c:dimcontinue "dimcontinue" t)
 
-  (defun *error* (message)
-    (*layer-error* oldlayer)
-    (princ))
+;; This one doesn't work because of the specific nature of DIM. I'll
+;; have to investigate it more later.
+;; Of course, I might not, since I never use the DIM command.
+(define-dimension-command 'c:dim "dim" t)
 
-  (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "dim")
-  (command ".dimlinear")
-  (while (= 1 (getvar "cmdactive"))
-    (command pause))
-  (setvar "clayer" oldlayer)
-  (princ))
-
-(command ".undefine" "dimaligned")
-(defun C:dimaligned (/ oldlayer *error*)
-
-  (defun *error* (message)
-    (*layer-error* oldlayer)
-    (princ))
-
-  (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "dim")
-  (command ".dimaligned")
-  (while (= 1 (getvar "cmdactive"))
-    (command pause))
-  (setvar "clayer" oldlayer)
-  (princ))
-
-(command ".undefine" "dimangular")
-(defun C:dimangular (/ oldlayer *error*)
-
-  (defun *error* (message)
-    (*layer-error* oldlayer)
-    (princ))
-
-  (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "dim")
-  (command ".dimangular")
-  (while (= 1 (getvar "cmdactive"))
-    (command pause))
-  (setvar "clayer" oldlayer)
-  (princ))
-
-(command ".undefine" "dimarc")
-(defun C:dimarc (/ oldlayer *error*)
-
-  (defun *error* (message)
-    (*layer-error* oldlayer)
-    (princ))
-
-  (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "dim")
-  (command ".dimarc")
-  (while (= 1 (getvar "cmdactive"))
-    (command pause))
-  (setvar "clayer" oldlayer)
-  (princ))
-
-(command ".undefine" "dimdiameter")
-(defun C:dimdiameter (/ oldlayer *error*)
-
-  (defun *error* (message)
-    (*layer-error* oldlayer)
-    (princ))
-
-  (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "dim")
-  (command ".dimdiameter")
-  (while (= 1 (getvar "cmdactive"))
-    (command pause))
-  (setvar "clayer" oldlayer)
-  (princ))
-
-(command ".undefine" "dimordinate")
-(defun C:dimordinate (/ oldlayer *error*)
-
-  (defun *error* (message)
-    (*layer-error* oldlayer)
-    (princ))
-
-  (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "dim")
-  (command ".dimordinate")
-  (while (= 1 (getvar "cmdactive"))
-    (command pause))
-  (setvar "clayer" oldlayer)
-  (princ))
-
-(command ".undefine" "dimradius")
-(defun C:dimradius (/ oldlayer *error*)
-
-  (defun *error* (message)
-    (*layer-error* oldlayer)
-    (princ))
-
-  (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "dim")
-  (command ".dimradius")
-  (while (= 1 (getvar "cmdactive"))
-    (command pause))
-  (setvar "clayer" oldlayer)
-  (princ))
-
+;; This one doesn't quite fit into the template mold of
+;; define-dimension-command. I might try and figure out a way to
+;; factor it out later, but this is enough for now.
 (command ".undefine" "dimbaseline")
 (defun C:dimbaseline (/ oldlayer old-dim-spacing *error*)
 
@@ -139,40 +76,6 @@
     (command pause))
   (setvar "clayer" oldlayer)
   (setvar "dimdli" old-dim-spacing)
-  (princ))
-
-(command ".undefine" "dimcontinue")
-(defun C:dimcontinue (/ oldlayer *error*)
-
-  (defun *error* (message)
-    (*layer-error* oldlayer)
-    (princ))
-
-  (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "dim")
-  (command ".dimcontinue")
-  (while (= 1 (getvar "cmdactive"))
-    (command pause))
-  (setvar "clayer" oldlayer)
-  (princ))
-
-;; This one doesn't work because of the specific nature of DIM. I'll
-;; have to investigate it more later.
-;; Of course, I might not, since I never use the DIM command.
-
-(command ".undefine" "dim")
-(defun C:dim (/ oldlayer *error*)
-
-  (defun *error* (message)
-    (*layer-error* oldlayer)
-    (princ))
-
-  (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "dim")
-  (command ".dim")
-  (while (= 1 (getvar "cmdactive"))
-    (command pause))
-  (setvar "clayer" oldlayer)
   (princ))
 
 ;; FIELD VERIFY DIMENSIONS
