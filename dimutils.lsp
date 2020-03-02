@@ -20,7 +20,7 @@
       (eval (list 'command "undefine" command-name)))
   (eval
    (list 'defun name '(/ oldlayer *error*)
-         '(defun *error* ()
+         '(defun *error* (msg)
            (setvar "clayer" oldlayer))
          '(setq oldlayer (getvar "clayer"))
          '(setvar "clayer" "dim")
