@@ -79,65 +79,28 @@
   (princ))
 
 ;; FIELD VERIFY DIMENSIONS
-;;
-;;These are shortcuts for commands to create dimensions in the style
-;;"FIELD VERIFY" and edit the text immediately after
 
-(defun C:fdli (/ olddimstyle)
-  (setq olddimstyle (getvar "dimstyle"))
-  (command "dimstyle" "r" "field verify")
-  (c:dimlinear)
-  (command "textedit" (entlast))
-  (command "dimstyle" "r" olddimstyle "")
-  (princ))
+;; Template macro for field verify dimensions
+(defun define-fv-dimension-command (name command-name)
+  (eval
+   (list 'defun name '(/ old-dim-style)
+         '(setq old-dim-style (getvar "dimstyle"))
+         '(command "dimstyle" "r" "field verify")
+         (list command-name)
+         '(command "textedit" (entlast))
+         '(command "dimstyle" "r" old-dim-style "")
+         '(princ))))
 
-(defun C:fdal (/ olddimstyle)
-  (setq olddimstyle (getvar "dimstyle"))
-  (command "dimstyle" "r" "field verify")
-  (c:dimaligned)
-  (command "textedit" (entlast))
-  (command "dimstyle" "r" olddimstyle "")
-  (princ))
+(define-fv-dimension-command 'c:fdli 'c:dimlinear)
+(define-fv-dimension-command 'c:fdal 'c:dimaligned)
+(define-fv-dimension-command 'c:fdan 'c:dimangular)
+(define-fv-dimension-command 'c:fdimarc 'c:dimarc)
+(define-fv-dimension-command 'c:fddi 'c:dimdiameter)
+(define-fv-dimension-command 'c:fdimord 'c:dimordinate)
+(define-fv-dimension-command 'c:fdra 'c:dimradius)
 
-(defun C:fdan (/ olddimstyle)
-  (setq olddimstyle (getvar "dimstyle"))
-  (command "dimstyle" "r" "field verify")
-  (c:dimangular)
-  (command "textedit" (entlast))
-  (command "dimstyle" "r" olddimstyle "")
-  (princ))
-
-(defun C:fdimarc (/ olddimstyle)
-  (setq olddimstyle (getvar "dimstyle"))
-  (command "dimstyle" "r" "field verify")
-  (c:dimarc)
-  (command "textedit" (entlast))
-  (command "dimstyle" "r" olddimstyle "")
-  (princ))
-
-(defun C:fddi (/ olddimstyle)
-  (setq olddimstyle (getvar "dimstyle"))
-  (command "dimstyle" "r" "field verify")
-  (c:dimdiameter)
-  (command "textedit" (entlast))
-  (command "dimstyle" "r" olddimstyle "")
-  (princ))
-
-(defun C:fdimord (/ olddimstyle)
-  (setq olddimstyle (getvar "dimstyle"))
-  (command "dimstyle" "r" "field verify")
-  (c:dimord)
-  (command "textedit" (entlast))
-  (command "dimstyle" "r" olddimstyle "")
-  (princ))
-
-(defun C:fdra (/ olddimstyle)
-  (setq olddimstyle (getvar "dimstyle"))
-  (command "dimstyle" "r" "field verify")
-  (c:dimradius)
-  (command "textedit" (entlast))
-  (command "dimstyle" "r" olddimstyle "")
-  (princ))
+;; This one's almost a lost cause for now
+(define-fv-dimension-command 'c:fdim 'c:dim)
 
 ;; These next two are different in that they don't automatically edit
 ;; the text. This wouldn't work very well, since these commands create
@@ -155,16 +118,6 @@
   (c:dimcontinue)
   (command "dimstyle" "r" olddimstyle "")
   (princ))
-
-;; This is almost a lost cause for now
-(defun C:fdim (/ olddimstyle)
-  (setq olddimstyle (getvar "dimstyle"))
-  (command "dimstyle" "r" "field verify")
-  (c:dim)
-  (command "textedit" (entlast))
-  (command "dimstyle" "r" olddimstyle "")
-  (princ))
-
 
 ;; This is purely a convenience function for something I draw often. I
 ;; frequently need a chain of dimensions followed by an overall. I'm
