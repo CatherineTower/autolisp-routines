@@ -9,9 +9,6 @@
 ;; These replace the TEXT and MLEADER commands with commands that set
 ;; the layer before creating the object
 
-;; (defun changelayer (entitydata newlayername)
-;;   (subst (cons 8 newlayername) (assoc 8 entitydata) entitydata)
-
 (command ".undefine" "mleader")
 (defun C:mleader (/ oldlayer *error*)
 
@@ -98,5 +95,4 @@
         entity (entget text))
   (setq entity (subst (cons 1 (vl-princ-to-string output)) (assoc 1 entity) entity))
   (entmod entity)
-
   (princ))
