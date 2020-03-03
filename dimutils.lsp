@@ -15,9 +15,8 @@
 ;; A warning, however: the commands will not execute without a layer
 ;; named "DIM" in the drawing. What's more, they'll give you a really
 ;; cryptic and unhelpful error message.
-(defun define-dimension-command (name command-name undefine-p)
-  (if undefine-p
-      (eval (list 'command "undefine" command-name)))
+(defun define-dimension-command (name command-name)
+  (eval (list 'command "undefine" command-name))
   (eval
    (list 'defun name '(/ oldlayer *error*)
          '(defun *error* (msg)
@@ -33,38 +32,30 @@
 
 ;; These replace the standard dimension commands with routines that
 ;; swap the layer for "DIM" before applying the dimension
-
-(setq +preferred-dim-spacing+ 0.375)
-
-(defun *layer-error* (layer)
-  (setvar "clayer" layer))
-
-(defun *spacing-error* (spacing)
-  (setvar "dimdli" spacing))
-
-(define-dimension-command 'c:dimlinear "dimlinear" t)
-(define-dimension-command 'c:dimaligned "dimaligned" t)
-(define-dimension-command 'c:dimangular "dimangular" t)
-(define-dimension-command 'c:dimarc "dimarc" t)
-(define-dimension-command 'c:dimdiameter "dimdiameter" t)
-(define-dimension-command 'c:dimordinate "dimordinate" t)
-(define-dimension-command 'c:dimradius "dimradius" t)
-(define-dimension-command 'c:dimcontinue "dimcontinue" t)
+(define-dimension-command 'c:dimlinear "dimlinear")
+(define-dimension-command 'c:dimaligned "dimaligned")
+(define-dimension-command 'c:dimangular "dimangular")
+(define-dimension-command 'c:dimarc "dimarc")
+(define-dimension-command 'c:dimdiameter "dimdiameter")
+(define-dimension-command 'c:dimordinate "dimordinate")
+(define-dimension-command 'c:dimradius "dimradius")
+(define-dimension-command 'c:dimcontinue "dimcontinue")
 
 ;; This one doesn't work because of the specific nature of DIM. I'll
 ;; have to investigate it more later.
 ;; Of course, I might not, since I never use the DIM command.
-(define-dimension-command 'c:dim "dim" t)
+(define-dimension-command 'c:dim "dim")
 
 ;; This one doesn't quite fit into the template mold of
 ;; define-dimension-command. I might try and figure out a way to
 ;; factor it out later, but this is enough for now.
+(setq +preferred-dim-spacing+ 0.375)
 (command ".undefine" "dimbaseline")
 (defun C:dimbaseline (/ oldlayer old-dim-spacing *error*)
 
   (defun *error* (message)
-    (*layer-error* oldlayer)
-    (*spacing-error* old-dim-spacing)
+    (setvar "clayer" oldlayer)
+    (setvar "dimdli" old-dim-spacing)
     (princ))
 
   (setq oldlayer (getvar "clayer"))
@@ -115,10 +106,25 @@
 ;; These next two are different in that they don't automatically edit
 ;; the text. This wouldn't work very well, since these commands create
 ;; many dimension objects
-(defun C:fdba (/ olddimstyle)
+(defun C:fdba (/ oldlayer olddimstyle old-dim-spacing *error*)
+
+  (defun *error* (message)
+    (setvar "clayer" oldlayer)
+    (setvar "dimdli" old-dim-spacing)
+    (command "dimstyle" "r" olddimstyle "")
+    (princ))
+
+  (setq oldlayer (getvar "clayer"))
+  (setvar "clayer" "dim")
+  (setq old-dim-spacing (getvar "dimdli"))
+  (setvar "dimdli" +preferred-dim-spacing+)
   (setq olddimstyle (getvar "dimstyle"))
   (command "dimstyle" "r" "field verify")
-  (c:dimbaseline)
+  (command ".dimbaseline")
+  (while (= 1 (getvar "cmdactive"))
+    (command pause))
+  (setvar "clayer" oldlayer)
+  (setvar "dimdli" old-dim-spacing)
   (command "dimstyle" "r" olddimstyle "")
   (princ))
 
