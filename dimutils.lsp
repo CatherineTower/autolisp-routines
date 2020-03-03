@@ -83,24 +83,34 @@
 ;; Template macro for field verify dimensions
 (defun define-fv-dimension-command (name command-name)
   (eval
-   (list 'defun name '(/ old-dim-style)
+   (list 'defun name '(/ old-dim-style old-layer *error*)
+         '(defun *error* (message)
+           (setvar "clayer" old-layer)
+           (command "dimstyle" "r" old-dim-style))
+
+         '(setq old-layer (getvar "clayer"))
+         '(setvar "clayer" "dim")
          '(setq old-dim-style (getvar "dimstyle"))
          '(command "dimstyle" "r" "field verify")
-         (list command-name)
+         (list 'command (strcat "." command-name))
+         '(while (= 1 (getvar "cmdactive"))
+           (command pause))
          '(command "textedit" (entlast))
          '(command "dimstyle" "r" old-dim-style "")
+         '(setvar "clayer" old-layer)
          '(princ))))
 
-(define-fv-dimension-command 'c:fdli 'c:dimlinear)
-(define-fv-dimension-command 'c:fdal 'c:dimaligned)
-(define-fv-dimension-command 'c:fdan 'c:dimangular)
-(define-fv-dimension-command 'c:fdimarc 'c:dimarc)
-(define-fv-dimension-command 'c:fddi 'c:dimdiameter)
-(define-fv-dimension-command 'c:fdimord 'c:dimordinate)
-(define-fv-dimension-command 'c:fdra 'c:dimradius)
+(define-fv-dimension-command 'c:fdli ".dimlinear")
+(define-fv-dimension-command 'c:fdal "dimaligned")
+(define-fv-dimension-command 'c:fdan "dimangular")
+(define-fv-dimension-command 'c:fdimarc "dimarc")
+(define-fv-dimension-command 'c:fddi "dimdiameter")
+(define-fv-dimension-command 'c:fdimord "dimordinate")
+(define-fv-dimension-command 'c:fdra "dimradius")
+(define-fv-dimension-command 'c:fdco "dimcontinue")
 
 ;; This one's almost a lost cause for now
-(define-fv-dimension-command 'c:fdim 'c:dim)
+(define-fv-dimension-command 'c:fdim "dim")
 
 ;; These next two are different in that they don't automatically edit
 ;; the text. This wouldn't work very well, since these commands create
@@ -109,13 +119,6 @@
   (setq olddimstyle (getvar "dimstyle"))
   (command "dimstyle" "r" "field verify")
   (c:dimbaseline)
-  (command "dimstyle" "r" olddimstyle "")
-  (princ))
-
-(defun C:fdco (/ olddimstyle)
-  (setq olddimstyle (getvar "dimstyle"))
-  (command "dimstyle" "r" "field verify")
-  (c:dimcontinue)
   (command "dimstyle" "r" olddimstyle "")
   (princ))
 
