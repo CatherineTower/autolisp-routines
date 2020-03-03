@@ -116,10 +116,10 @@
 
   (setq oldlayer (getvar "clayer"))
   (setvar "clayer" "dim")
-  (setq old-dim-spacing (getvar "dimdli"))
-  (setvar "dimdli" +preferred-dim-spacing+)
   (setq olddimstyle (getvar "dimstyle"))
   (command "dimstyle" "r" "field verify")
+  (setq old-dim-spacing (getvar "dimdli"))
+  (setvar "dimdli" +preferred-dim-spacing+)
   (command ".dimbaseline")
   (while (= 1 (getvar "cmdactive"))
     (command pause))
