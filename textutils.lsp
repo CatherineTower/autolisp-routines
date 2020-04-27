@@ -13,11 +13,11 @@
 (defun C:mleader (/ oldlayer *error*)
 
   (defun *error* (message)
-    (*layer-error* oldlayer)
+    (setvar "clayer" oldlayer)
     (princ))
 
   (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "text")
+  (setvar "clayer" *text-layer*)
   (command ".mleader" pause pause "")
   (command ".textedit" (entlast))
   (setvar "clayer" oldlayer)
@@ -27,11 +27,11 @@
 (defun C:mtext (/ oldlayer *error*)
 
   (defun *error* (message)
-    (*layer-error* oldlayer)
+    (setvar "clayer" oldlayer)
     (princ))
 
   (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "text")
+  (setvar "clayer" *text-layer*)
   (command ".mtext" pause pause "")
   (command ".textedit" (entlast))
   (setvar "clayer" oldlayer)
@@ -64,7 +64,7 @@
         (list (cons 0 "LWPOLYLINE")
               (cons 100 "AcDbEntity")
               (cons 100 "AcDbPolyline")
-              (cons 8 "TEXT")
+              (cons 8 *text-layer*)
               (cons 90 4)
               (cons 70 1)
               (list 10 text-origin-x text-origin-y 0.0)
@@ -75,7 +75,7 @@
                     (- text-origin-y text-height) 0.0)))
   (entmake rectangle-entity)
   (command ".revcloud" "O" (entlast) "")
-  (entmod (subst '(8 . "TEXT") (assoc 8 (entget (entlast)))
+  (entmod (subst (cons 8  *text-layer*) (assoc 8 (entget (entlast)))
                  (entget (entlast)))))
 
 (defun c:revcloudtext (/ text-set i)

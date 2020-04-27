@@ -86,3 +86,16 @@
   (cond ((null list) nil)
         ((equal value (cdr (first list))) (first list))
         (t (rassoc value (rest list)))))
+
+;; Due to the deficiency in AutoLISP of &rest parameters, this has to
+;; be defined specifically as a function that only takes one list as
+;; an argument
+(defun mapc-1 (func seq)
+  (cond ((null seq) nil)
+        (t (apply func (list (first seq)))
+           (mapc-1 func (rest seq)))))
+
+(defun mapcan-1 (func seq)
+  (cond ((null seq) nil)
+        (t (nconc (apply func (list (first seq)))
+                  (mapc-1 func (rest seq))))))

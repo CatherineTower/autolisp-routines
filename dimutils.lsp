@@ -22,7 +22,7 @@
          '(defun *error* (msg)
            (setvar "clayer" oldlayer))
          '(setq oldlayer (getvar "clayer"))
-         '(setvar "clayer" "dim")
+         '(setvar "clayer" *dimension-layer*)
          (list 'command (strcat "." command-name))
          '(while (= 1 (getvar "cmdactive"))
            (command pause))
@@ -59,7 +59,7 @@
     (princ))
 
   (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "dim")
+  (setvar "clayer" *dimension-layer*)
   (setq old-dim-spacing (getvar "dimdli"))
   (setvar "dimdli" +preferred-dim-spacing+)
   (command ".dimbaseline")
@@ -80,7 +80,7 @@
            (command "dimstyle" "r" old-dim-style))
 
          '(setq old-layer (getvar "clayer"))
-         '(setvar "clayer" "dim")
+         '(setvar "clayer" *dimension-layer*)
          '(setq old-dim-style (getvar "dimstyle"))
          '(command "dimstyle" "r" "field verify")
          (list 'command (strcat "." command-name))
@@ -115,7 +115,7 @@
     (princ))
 
   (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "dim")
+  (setvar "clayer" *dimension-layer*)
   (setq olddimstyle (getvar "dimstyle"))
   (command "dimstyle" "r" "field verify")
   (setq old-dim-spacing (getvar "dimdli"))
@@ -135,12 +135,12 @@
 (defun c:dimchain (/ oldlayer first-dim old-dim-spacing *error*)
 
   (defun *error* (message)
-    (*layer-error* oldlayer)
-    (*spacing-error* old-dim-spacing)
+    (setvar "clayer" oldlayer)
+    (setvar "dimdli" old-dim-spacing)
     (princ))
 
   (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "dim")
+  (setvar "clayer" *dimension-layer*)
 
   (setq old-dim-spacing (getvar "dimdli"))
   (setvar "dimdli" +preferred-dim-spacing+)
@@ -160,3 +160,11 @@
   (setvar "dimdli" old-dim-spacing)
   (setvar "clayer" oldlayer)
   (princ))
+
+(defun define-with-different-layer (func-name args layer body / oldlayer)
+  (eval
+   (list 'defun func-name args
+         '(setq oldlayer (getvar "clayer"))
+         (list 'setvar "clayer" layer)
+         (list 'mapc-1 body)
+         '(setvar "clayer" oldlayer))))

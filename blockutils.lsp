@@ -13,7 +13,7 @@
 (defun c:insbr (/ oldlayer first-point second-point x1 x2 y1 y2 *error*)
 
   (defun *error* (message)
-    (*layer-error* oldlayer)
+    (setvar "clayer" oldlayer)
     (princ))
 
   (setq oldlayer (getvar "clayer"))
@@ -23,7 +23,7 @@
     y1 (cadr first-point)
     x2 (car second-point)
     y2 (cadr second-point))
-  (setvar "clayer" "symb")
+  (setvar "clayer" *symbol-layer*)
   (command "insert" "break"
        (list (/ (+ x1 x2) 2) (/ (+ y1 y2) 2))
        "" ""
@@ -40,11 +40,11 @@
 (defun c:intitle (/ oldlayer *error*)
 
   (defun *error* (message)
-    (*layer-error* oldlayer)
+    (setvar "clayer" oldlayer)
     (princ))
 
   (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "symb")
+  (setvar "clayer" *symbol-layer*)
   (command ".insert" "title bar_anno" pause "" "" ""
        "" "" ""
        (if (in-paperspace-p)
@@ -58,11 +58,11 @@
 (defun c:insel (/ oldlayer *error*)
 
   (defun *error* (message)
-    (*layer-error* oldlayer)
+    (setvar "clayer" oldlayer)
     (princ))
 
   (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "symb")
+  (setvar "clayer" *symbol-layer*)
   (command ".insert" "elev bug_anno" pause "" "" "")
   (setvar "clayer" oldlayer)
   (princ))
@@ -71,11 +71,11 @@
 (defun c:insec (/ oldlayer *error*)
 
   (defun *error* (message)
-    (*layer-error* oldlayer)
+    (setvar "clayer" oldlayer)
     (princ))
 
   (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "symb")
+  (setvar "clayer" *symbol-layer*)
   (command ".insert" "section marker_anno" pause "" "" "")
   (setvar "clayer" oldlayer)
   (princ))
@@ -84,11 +84,11 @@
 (defun c:fe (/ oldlayer *error*)
 
   (defun *error* (message)
-    (*layer-error* oldlayer)
+    (setvar "clayer" oldlayer)
     (princ))
 
   (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "symb")
+  (setvar "clayer" *symbol-layer*)
   (command ".insert" "finished end" pause "" "" "")
   (setvar "clayer" oldlayer)
   (princ))
@@ -97,11 +97,11 @@
 (defun c:indet (/ oldlayer *error*)
 
   (defun *error* (message)
-    (*layer-error* oldlayer)
+    (setvar "clayer" oldlayer)
     (princ))
 
   (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "symb")
+  (setvar "clayer" *symbol-layer*)
   (command ".insert" "detail bubble_anno" pause "" "" "")
   (setvar "clayer" oldlayer)
   (princ))
@@ -110,11 +110,11 @@
 (defun c:inlev (/ oldlayer *error*)
 
   (defun *error* (message)
-    (*layer-error* oldlayer)
+    (setvar "clayer" oldlayer)
     (princ))
 
   (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "hardware")
+  (setvar "clayer" *hardware-layer*)
   (command ".insert" "leveler" pause "" "" "")
   (setvar "clayer" oldlayer)
   (princ))
@@ -122,11 +122,11 @@
 ;; insert North arrow block
 (defun c:insar (/ oldlayer *error*)
   (defun *error* (message)
-    (*layer-error* oldlayer)
+    (setvar "clayer" oldlayer)
     (princ))
 
   (setq oldlayer (getvar "clayer"))
-  (setvar "clayer" "symb")
+  (setvar "clayer" *symbol-layer*)
   (command ".insert" "north arrow" pause "" "" "")
   (setvar "clayer" oldlayer)
   (princ))
