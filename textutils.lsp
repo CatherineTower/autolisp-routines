@@ -75,7 +75,7 @@
                     (- text-origin-y text-height) 0.0)))
   (entmake rectangle-entity)
   (command ".revcloud" "O" (entlast) "")
-  (entmod (subst (cons 8  *text-layer*) (assoc 8 (entget (entlast)))
+  (entmod (subst (cons 8 *text-layer*) (assoc 8 (entget (entlast)))
                  (entget (entlast)))))
 
 (defun c:revcloudtext (/ text-set i)
