@@ -57,3 +57,19 @@
          (get-point-points (entity-list)))
 
         (t (princ "Error: no points for object"))))
+
+;; Calculates the "Max Offset" of a pocket cut. This is just to prove
+;; that the calculation can be done in software instead of manually
+(defun max-offset (polyline / points-list min-dimension)
+  (setq points-list
+        (vl-remove-if-not '(lambda (x) (= 10 (car x)))
+                          (entget polyline)))
+  (setq min-dimension
+        (reduce 'min
+                (vl-remove-if 'zerop
+                              (map-all-pairs
+                               '(lambda (x y) (distance
+                                               (list (cadr x) (caddr x))
+                                               (list (cadr y) (caddr y))))
+                               points-list))))
+  (abs (/ (- min-dimension 0.5) 2.0)))

@@ -99,3 +99,16 @@
   (cond ((null seq) nil)
         (t (nconc (apply func (list (first seq)))
                   (mapc-1 func (rest seq))))))
+
+;; Map a function across all ADJACENT pairs of a list. So for a list
+;; of length three, it will go (f 1 2) (f 2 3) (f 3 1)
+(defun map-all-pairs (func lst / i result)
+  (setq i 0
+        result nil)
+  (repeat (length lst)
+          (setq result (cons (apply func (list
+                                          (nth i lst)
+                                          (nth (rem (1+ i) (length lst)) lst)))
+                             result))
+          (setq i (1+ i)))
+  (reverse result))
