@@ -32,3 +32,56 @@
                                                      (list (cadr y) (caddr y))))
                                      points-list))))
         (abs (/ (- min-dimension *tr*) 2.0)))))
+
+;; Removes redundant vertices from an object. Currently only
+;; polylines. The resolution of the final product is determined by *EPSILON*
+(defun c:prune (/ polyline-set i)
+  (setq polyline-set (ssget '((0 . "LWPOLYLINE"))))
+  (setq i 0)
+  (if polyline-set
+      (repeat (sslength polyline-set)
+              (prune-polyline (entget (ssname polyline-set i)))
+              (setq i (1+ i))))
+  (princ))
+
+;; Prunes unnecessary vertices from dense polylines
+;; NOTE: this only works with polylines made entirely of line
+;; segments. For now, at least.
+(defun prune-polyline (polyline / points-list i result)
+  (setq points-list (vl-remove-if-not
+                     '(lambda (x) (= 10 (car x))) polyline))
+  (setq i 0)
+  (setq result (list
+                '(0 . "LWPOLYLINE")
+                '(100 . "AcDbEntity")
+                '(100 . "AcDbPolyline")
+                (cons 8 (cdr (assoc 8 polyline)))))
+  (while (< i (length points-list))
+    (mapc-1 '(lambda (x)
+              (setq points-list (vl-remove x points-list)))
+            (generate-prune-candidates
+             (subseq points-list
+                     i
+                     (if (> (- (length points-list) (+ 5 i)) 2)
+                         (+ 5 i)
+                         i))))
+    (setq i (1+ i)))
+  (setq result (append result (list (cons 90 (length points-list)))))
+  (setq result (append result (list '(70 . 1))))
+  (setq result (append result points-list))
+  (entdel (cdr (assoc -1 polyline)))
+  (entmake result))
+
+(setq *epsilon* 0.0001)
+(defun generate-prune-candidates (points-list / angles candidates)
+  (setq angles (subseq (map-pairs 'angle points-list)
+                       0 (1- (length points-list)))
+        candidates (map-pairs
+                    '(lambda (x y) (< (abs (- x y)) *epsilon*))
+                    angles))
+  (print (mapcar '(lambda (x y z) (list x y z))
+                 angles candidates points-list))
+  (vl-remove-if 'null
+                (mapcar '(lambda (x y) (if x y))
+                        candidates
+                        (subseq points-list 1 (length points-list)))))
