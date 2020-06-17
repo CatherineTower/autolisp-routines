@@ -33,8 +33,6 @@
                                      points-list))))
         (abs (/ (- min-dimension *tr*) 2.0)))))
 
-;; Removes redundant vertices from an object. Currently only
-;; polylines. The resolution of the final product is determined by *EPSILON*
 (defun c:prune (/ polyline-set i)
   (setq polyline-set (ssget '((0 . "LWPOLYLINE"))))
   (setq i 0)
@@ -57,31 +55,24 @@
                 '(100 . "AcDbPolyline")
                 (cons 8 (cdr (assoc 8 polyline)))))
   (while (< i (length points-list))
-    (mapc-1 '(lambda (x)
-              (setq points-list (vl-remove x points-list)))
-            (generate-prune-candidates
-             (subseq points-list
-                     i
-                     (if (> (- (length points-list) (+ 5 i)) 2)
-                         (+ 5 i)
-                         i))))
+    (mapc-1 '(lambda (x) (setq points-list (vl-remove x points-list)))
+            ;; Only generate prune candidates if we have more than two points to go
+            (if (> (length points-list) (+ 5 i))
+                (generate-prune-candidates (subseq points-list i (+ 5 i)))
+                (generate-prune-candidates (subseq points-list i (length points-list)))))
     (setq i (1+ i)))
   (setq result (append result (list (cons 90 (length points-list)))))
-  (setq result (append result (list '(70 . 1))))
+  (setq result (append result (list (cons 70 (cdr (assoc 70 polyline))))))
   (setq result (append result points-list))
   (entdel (cdr (assoc -1 polyline)))
   (entmake result))
 
-(setq *epsilon* 0.0001)
+;; Determining the difference between two angles in AutoCAD is constrained by the precision of
+;; floating-point arithmetic in AutoLISP. Which is to say that it's altogether NOT precise enough.
 (defun generate-prune-candidates (points-list / angles candidates)
-  (setq angles (subseq (map-pairs 'angle points-list)
-                       0 (1- (length points-list)))
-        candidates (map-pairs
-                    '(lambda (x y) (< (abs (- x y)) *epsilon*))
-                    angles))
-  (print (mapcar '(lambda (x y z) (list x y z))
-                 angles candidates points-list))
-  (vl-remove-if 'null
-                (mapcar '(lambda (x y) (if x y))
-                        candidates
-                        (subseq points-list 1 (length points-list)))))
+  ;; With every map-pairs we have to disregard the last value, since it wraps around the input list
+  (setq angles (subseq (map-pairs 'angle points-list) 0 (1- (length points-list)))
+        candidates (subseq (map-pairs '(lambda (x y) (= (- x y) 0)) angles) 0 (1- (length angles))))
+  (vl-remove-if 'null (mapcar '(lambda (x y) (if x y))
+                              candidates
+                              (subseq points-list 1 (length points-list)))))
