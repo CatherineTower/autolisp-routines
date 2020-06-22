@@ -1,1 +1,20 @@
-(command "plot" "y" "Layout1" "NPI002163 (HP LaserJet 700 M712)" "Letter" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "y")
+(command "plot"
+         "y"                            ;Detailed plot configuration (y/N)
+         "Layout1"                      ;Layout to plot
+         "NPI002163 (HP LaserJet 700 M712)" ;Plot device
+         "Letter"                           ;Paper size
+         ""                                 ;Paper units
+         ""                                 ;Drawing orientation (portrait/LANDSCAPE)
+         ""                                 ;Plot upside-down (yes/NO)
+         ""                                 ;Plot area (DISPLAY/extents/limits/view/window)
+         ""                                 ;Plot scale (plotted inches = drawing units/FIT)
+         ""                                 ;Plot offset (x,y/center <0.00,0.00>)
+         ""                                 ;Plot with plot styles (YES/no)
+         ""                                 ;Plot style table name
+         ""                                 ;Plot with lineweights (YES/no)
+         ""                                 ;Scale lineweights (yes/NO)
+         ""                             ;Plot paperspace first (yes/NO)
+         ""                             ;Hide paperspace objects (yes/NO)
+         ""                             ;Write plot to file (y/N)
+         ""                             ;Save changes to page setup (y/N)
+         "y")                           ;Proceed with plot (Y/n)
